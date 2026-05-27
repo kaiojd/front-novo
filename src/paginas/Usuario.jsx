@@ -7,6 +7,7 @@ export default function Usuario() {
     const [usuarios, setUsuarios] = useState([])
     const [nome, setNome] = useState('')
     const [senha, setSenha] = useState('')
+    const[modal, setModal]= useState(false)
 useEffect(() => {
     document.title = 'contagem ' + contador;
     const buscarUsuarios = async () => {
@@ -19,6 +20,22 @@ useEffect(() => {
 
 }, [contador])
 
+    const editar = (usuario ) => {
+      if(!usuario || usuario.nome){
+        alert('erro ao buscar usuario')
+    
+        }
+        setModal(true)
+       setEmail(usuario.email)
+       setNome(usuario.nome)
+       setSenha(usuario.senha)
+        console.log(usuario);
+    }
+
+     const confirmarEdicao = () => {
+        console.log(usuario);
+    }
+
     return (
         <div>
              <h1>Usuario</h1>
@@ -28,7 +45,10 @@ useEffect(() => {
                 somar
             </button>
 
-            <input type = "text" id="email"
+            {modal &&(
+               <div classNome="fundo-modal">
+                    <div classNome="fundo-content">
+                <input type = "text" id="email"
             placeholder="DIGITE EMAIL"
             value={email}
             onChange = {(e) => setEmail(e.target.value)}
@@ -49,15 +69,27 @@ useEffect(() => {
 
             />
 
+          
+          <button onClick={confirmarEdicao}>confirmar edição</button>
+          
+          
             <h3>{email}</h3>
             <h3>{nome}</h3>
             <h3>{senha}</h3>
+                </div>
+                    </div>
+            )}
+
+           
 
         <ul>
             {usuarios.map( (usuario) => (
                 <li key={usuario.id}>
                     <b>{usuario.nome}</b>
+                   <br />
                     STATUS: {usuario.ativo ? 'ativo' : 'desativo'}
+                <br />
+                <button onClick={() => editar(usuario)}>editar</button>
                 </li>
             ))}
         </ul>
