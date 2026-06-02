@@ -7,7 +7,9 @@ export default function Usuario() {
     const [usuarios, setUsuarios] = useState([])
     const [nome, setNome] = useState('')
     const [senha, setSenha] = useState('')
-    const[modal, setModal]= useState(false)
+      const [id, setId] = useState(0)
+    const [modal, setModal] = useState(false)
+    
 useEffect(() => {
     document.title = 'contagem ' + contador;
     const buscarUsuarios = async () => {
@@ -15,8 +17,8 @@ useEffect(() => {
         const data = await resposta.json()
         setUsuarios(data)
         console.log(data);
-    }
-    buscarUsuarios()
+    } 
+    buscarUsuarios() 
 
 }, [contador])
 
@@ -32,9 +34,26 @@ useEffect(() => {
         console.log(usuario);
     }
 
-     const confirmarEdicao = () => {
-        console.log(usuario);
-    }
+     const confirmarEdicao = async () => {
+        const resultado = await fetch(`http://localhost:3000/usuarios/${id}`,
+            {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({email,nome, senha})
+        })
+        const data = await resultado.json()
+        console.log(data);}
+
+     const deletar = async () => {
+        const resultado = await fetch(`http://localhost:3000/usuarios/${id}`,
+            {
+            method: 'DELETE',
+    
+        })
+        const data = await resultado.json()
+        console.log(data);
+        buscarUsuarios()
+
 
     return (
         <div>
@@ -47,6 +66,7 @@ useEffect(() => {
 
             {modal &&(
                <div classNome="fundo-modal">
+                <h1>editar</h1>
                     <div classNome="fundo-content">
                 <input type = "text" id="email"
             placeholder="DIGITE EMAIL"
@@ -69,7 +89,7 @@ useEffect(() => {
 
             />
 
-          
+            <button onClick={() =>setModal(false)}>fechar</button>
           <button onClick={confirmarEdicao}>confirmar edição</button>
           
           
@@ -90,10 +110,11 @@ useEffect(() => {
                     STATUS: {usuario.ativo ? 'ativo' : 'desativo'}
                 <br />
                 <button onClick={() => editar(usuario)}>editar</button>
+                <button onClick={() => deletar(usuario)}>deletar</button>
                 </li>
             ))}
         </ul>
         </div>
       
     )
-}
+ }
